@@ -14,7 +14,7 @@ export const getRedirectUrl = (uri: string | null | undefined): string => {
 
 export function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: string | undefined): string {
   if ((callbackUrl && callbackUrl.length > 0)) {
-    return callbackUrl.includes('?') ? (callbackUrl + '&redirect=' + redirectUrl) : (callbackUrl + '?redirect=' + redirectUrl)
+    return  callbackUrl
   } else {
     return getDefaultBackUrl(redirectUrl, host)
   }

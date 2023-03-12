@@ -48,6 +48,10 @@ export default defineEventHandler(async (event) => {
     // logger.info('received and validated tokens %j', tokenSet)
     // logger.info('validated ID Token claims %j', tokenSet.claims())
     if (tokenSet.access_token) {
+      setCookie(event, config.cookiePrefix + 'access_token', tokenSet.id_token, {
+        maxAge: config.cookieMaxAge,
+        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
+      })
       await getUserInfo(tokenSet.access_token)
     }
     res.writeHead(302, { Location: redirectUrl || '/' })
@@ -76,10 +80,6 @@ export default defineEventHandler(async (event) => {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
       // logger.info(userinfo)
-      setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
-        maxAge: config.cookieMaxAge,
-        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
-      })
       const cookie = config.cookie
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
